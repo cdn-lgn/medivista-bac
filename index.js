@@ -36,6 +36,8 @@ app.get('/', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date().toISOString() });
 });
 
+// Add product routes
+app.use('/api', productRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
