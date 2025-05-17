@@ -13,13 +13,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
-const allowedOriginOne = process.env.CLIENT_URLS.split(",")[0];
-const allowedOriginTwo = process.env.CLIENT_URLS.split(",")[1];
-
 const app = express();
 app.use(cors({
-  origin:[allowedOriginOne, allowedOriginTwo] ||
-  "localhost:5173",
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
   credentials: true
 }));
 app.use(express.json());
