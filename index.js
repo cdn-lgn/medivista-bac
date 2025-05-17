@@ -32,14 +32,10 @@ fs.createReadStream(path.join(__dirname, "MOCK_DATA_MED.csv"))
     console.error("Error reading CSV file:", error);
   });
 
-app.use(
-  "/",
-  (req, res, next) => {
-    console.log(`${req.method} ${req.originalUrl}`);
-    next();
-  },
-  productRoutes,
-);
+app.get('/', (req, res) => {
+  res.json({ status: 'Server is running', timestamp: new Date().toISOString() });
+});
+
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
