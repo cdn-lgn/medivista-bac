@@ -12,26 +12,34 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const corsOptions = {
+  origin: [process.env.URL_ONE, process.env.URL_TWO,"localhost:5173"],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 
 const app = express();
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const buffer = []
+const buffer = [];
 fs.createReadStream(path.join(__dirname, "MOCK_DATA_MED.csv"))
   .pipe(csv())
   .on("data", (row) => buffer.push(row))
   .on("end", () => initCache(buffer))
   .on("error", (error) => {
     console.error("Error reading CSV file:", error);
-  }
-);
+  });
 
-app.use("/", productRoutes);
+app.use(
+  "/",
+  (req, res, next) => {
+    console.log(`${req.method} ${req.originalUrl}`);
+    next();
+  },
+  productRoutes,
+);
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
