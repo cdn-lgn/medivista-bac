@@ -6,12 +6,22 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import productRoutes from "./routes/productRoutes.js";
 import { initCache } from "./controllers/productController.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+
+const allowedOriginOne = process.env.CLIENT_URLS.split(",")[0];
+const allowedOriginTwo = process.env.CLIENT_URLS.split(",")[1];
+
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin:[allowedOriginOne, allowedOriginTwo] ||
+  "localhost:5173",
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
