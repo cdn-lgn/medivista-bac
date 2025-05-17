@@ -12,8 +12,20 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const allowedOrigins = [
+  process.env.URL_ONE,
+  process.env.URL_TWO,
+  "http://localhost:5173"
+];
+
 const corsOptions = {
-  origin: [process.env.URL_ONE, process.env.URL_TWO,"localhost:5173"],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
